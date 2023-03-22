@@ -77,7 +77,7 @@ export default {
           children: [
             {
               id: '1-1',
-              menuName: '默认商品',
+              menuName: '商品列表',
               icon: 'el-icon-sell',
               path: '/goodsList'
             }
