@@ -9,6 +9,7 @@
         <div class="right">
           <el-button @click="reset">重置</el-button>
           <el-button type="primary" @click="getGoodsList">搜索</el-button>
+          <el-button type="primary" @click="toAddGoodsPage">新增</el-button>
         </div>
       </div>
       <div class="search-form">
@@ -42,7 +43,7 @@
       <el-table :data="goodsList" border style="width: 100%">
         <el-table-column type="index" label="编号" width="100">
         </el-table-column>
-        <el-table-column prop="goodsName" label="商品名" width="180">
+        <el-table-column prop="goodsName" label="商品名" width="150">
         </el-table-column>
         <el-table-column label="商品图片" width="250">
           <template slot-scope="scope">
@@ -53,11 +54,11 @@
             ></el-image>
           </template>
         </el-table-column>
-        <el-table-column prop="price" label="价格" width="150">
+        <el-table-column prop="price" label="价格" width="180">
         </el-table-column>
-        <el-table-column prop="stock" label="库存" width="150">
+        <el-table-column prop="stock" label="库存" width="180">
         </el-table-column>
-        <el-table-column label="状态" width="150">
+        <el-table-column label="状态" width="180">
           <template slot-scope="scope">
             <el-switch v-model="scope.row.goodsStatus" :active-value="1" :inactive-value="0" @change="updateStatus(scope.row)"></el-switch>
           </template>
@@ -105,7 +106,6 @@
 import goodsApi from '@/api/goods'
 import categoryApi from '@/api/category'
 import baseImageUrl from '@/utils/baseImageUrl'
-import goods from '@/api/goods'
 export default {
   data() {
     return {
@@ -185,6 +185,11 @@ export default {
     updateStatus(row) {
       goodsApi.updateStatus(row.id, row.goodsStatus).then((res) => {
         this.$message.success(res.msg)
+      })
+    },
+    toAddGoodsPage() {
+      this.$router.push({
+        path: '/addGoods'
       })
     }
   },
