@@ -60,7 +60,12 @@
         </el-table-column>
         <el-table-column label="状态" width="180">
           <template slot-scope="scope">
-            <el-switch v-model="scope.row.goodsStatus" :active-value="1" :inactive-value="0" @change="updateStatus(scope.row)"></el-switch>
+            <el-switch
+              v-model="scope.row.goodsStatus"
+              :active-value="1"
+              :inactive-value="0"
+              @change="updateStatus(scope.row)"
+            ></el-switch>
           </template>
         </el-table-column>
         <el-table-column label="操作">
@@ -99,6 +104,20 @@
       >
       </el-pagination>
     </div>
+
+    <el-dialog title="库存修改" :visible.sync="dialogFormVisible">
+      <el-form :model="stockForm">
+        <el-form-item label="库存数量" label-width="100px">
+          <el-input v-model="stockForm.stock" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer">
+        <el-button @click="cancel">取 消</el-button>
+        <el-button type="primary" @click="subStock"
+          >确 定</el-button
+        >
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -130,6 +149,9 @@ export default {
       goodsList: [],
       total: 0,
       baseImageUrl: baseImageUrl.BASE_IMG_URL,
+      dialogFormVisible: false,
+      currentId: 0,
+      stockForm: {}
     }
   },
   created() {
@@ -141,8 +163,18 @@ export default {
       console.log(val)
       this.searchForm.categoryId = val[1]
     },
-    updateStock(id) {},
-    toUpdatePage(id) {},
+    updateStock(id) {
+      this.currentId = id
+      this.dialogFormVisible = !this.dialogFormVisible
+    },
+    toUpdatePage(id) {
+      this.$router.push({
+        path: '/updateGoods',
+        query: {
+          goodsId: id
+        }
+      })
+    },
     deleteGoods(id) {
       this.$confirm('此操作将永久删除该商品, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -152,6 +184,7 @@ export default {
         .then(() => {
           goodsApi.deleteGoods(id).then((res) => {
             this.$message.success(res.msg)
+            this.getGoodsList()
           })
         })
         .catch(() => {})
@@ -189,7 +222,18 @@ export default {
     },
     toAddGoodsPage() {
       this.$router.push({
-        path: '/addGoods'
+        path: '/addGoods',
+      })
+    },
+    cancel() {
+      this.dialogFormVisible = !this.dialogFormVisible
+      this.stockForm = {}
+    },
+    subStock() {
+      goodsApi.updateStock(this.currentId, this.stockForm.stock).then((res) => {
+        this.$message.success(res.msg)
+        this.dialogFormVisible = !this.dialogFormVisible
+        this.getGoodsList()
       })
     }
   },

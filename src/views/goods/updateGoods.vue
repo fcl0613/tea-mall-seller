@@ -83,8 +83,7 @@
         </el-form-item>
         <el-form-item>
           <el-button @click="reback">返回</el-button>
-          <el-button @click="reset">重置</el-button>
-          <el-button type="primary" @click="onSubmit">新增商品</el-button>
+          <el-button type="primary" @click="onSubmit">更新商品</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -136,6 +135,7 @@ export default {
   },
   created() {
     this.getAllCategory()
+    this.getGoodsInfo()
   },
   methods: {
     reback() {
@@ -144,10 +144,10 @@ export default {
     onSubmit() {
       this.$refs.ruleForm.validate((valid) => {
         if (!valid) return
-        this.addGoods()
+        this.updateGoods()
       })
     },
-    addGoods() {
+    updateGoods() {
       if (this.coverUrl === '') {
         this.$message.error('请先上传封面图片')
       }
@@ -169,7 +169,7 @@ export default {
       }
       this.dataForm.goodsShowPic = showList
       this.dataForm.goodsDetails = detailList
-      goodsApi.addGoods(this.dataForm).then((res) => {
+      goodsApi.updateGoods(this.dataForm).then((res) => {
         this.$message.success(res.msg)
         this.reback()
       })
@@ -291,6 +291,30 @@ export default {
         _casecader.$refs.panel.syncActivePath()
       }
     },
+    getGoodsInfo() {
+      console.log(this.$route.query.goodsId)
+      goodsApi.getGoodsInfo(this.$route.query.goodsId).then((res) => {
+        this.dataForm = res.data
+        this.categoryValue = [this.dataForm.categoryParentId, this.dataForm.categoryId]
+        this.coverUrl = this.dataForm.goodsCover
+        let showList = this.dataForm.goodsShowPic
+        for(let i = 0; i < showList.length; i++) {
+          this.showFileList.push({
+            uid: showList[i].substr(0, showList[i].length - 4),
+            name: showList[i],
+            url: this.baseImageUrl + showList[i],
+          })
+        }
+        let detailList = this.dataForm.goodsDetails
+        for(let i = 0; i < detailList.length; i++) {
+          this.detailFileList.push({
+            uid: detailList[i].substr(0, detailList[i].length - 4),
+            name: detailList[i],
+            url: this.baseImageUrl + detailList[i],
+          })
+        }
+      })
+    }
   },
 }
 </script>
