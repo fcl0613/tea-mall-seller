@@ -7,6 +7,8 @@ import dashboard from '@/views/dashboard'
 import goods from '@/views/goods'
 import addGoods from '@/views/goods/addGoods'
 import updateGoods from '@/views/goods/updateGoods'
+import orderList from '@/views/order'
+import orderDetail from '@/views/order/detail'
 
 
 Vue.use(VueRouter)
@@ -41,6 +43,14 @@ const router = new VueRouter({
         {
           path: '/updateGoods',
           component: updateGoods
+        },
+        {
+          path: '/orderList',
+          component: orderList
+        },
+        {
+          path: '/orderDetail',
+          component: orderDetail
         }
       ]
     }

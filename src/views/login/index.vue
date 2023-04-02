@@ -30,7 +30,10 @@ import sellerApi from '@/api/seller'
 export default {
   data() {
     return {
-      formData: {},
+      formData: {
+        username: 'testAccount',
+        password: '123456'
+      },
       rules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
